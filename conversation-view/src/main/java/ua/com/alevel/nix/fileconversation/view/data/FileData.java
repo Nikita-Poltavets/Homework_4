@@ -4,9 +4,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.util.UriComponents;
 
 import ua.com.alevel.nix.fileconversation.view.config.ConversationType;
-import ua.com.alevel.nix.fileconversation.view.controller.files.IdentityFileController;
-import ua.com.alevel.nix.fileconversation.view.controller.files.ReplaceFileController;
-import ua.com.alevel.nix.fileconversation.view.controller.files.SplitFileController;
+import ua.com.alevel.nix.fileconversation.view.controller.files.*;
 
 import java.nio.file.Path;
 
@@ -35,6 +33,14 @@ public class FileData {
             case SPLIT : return MvcUriComponentsBuilder.fromMethodName(SplitFileController.class,
                     "serveFile", fileName).build();
             case REPLACE : return MvcUriComponentsBuilder.fromMethodName(ReplaceFileController.class,
+                    "serveFile", fileName).build();
+            case COUNTSYMBOLS: return MvcUriComponentsBuilder.fromMethodName(CountSymbolsFileController.class,
+                    "serveFile", fileName).build();
+            case COUNTWORDS: return MvcUriComponentsBuilder.fromMethodName(CountWordsFileController.class,
+                    "serveFile", fileName).build();
+            case REVERSE: return MvcUriComponentsBuilder.fromMethodName(ReverseFileController.class,
+                    "serveFile", fileName).build();
+            case FINDROOTS: return MvcUriComponentsBuilder.fromMethodName(FindRootsFileController.class,
                     "serveFile", fileName).build();
         }
         return null;

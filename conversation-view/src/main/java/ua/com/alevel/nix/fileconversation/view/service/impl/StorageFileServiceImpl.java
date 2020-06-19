@@ -3,8 +3,10 @@ package ua.com.alevel.nix.fileconversation.view.service.impl;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import ua.com.alevel.nix.fileconversation.util.ConversationUtil;
@@ -32,13 +34,21 @@ public class StorageFileServiceImpl implements StorageFileService {
     private final Path locationIdentityDir;
     private final Path locationSplitDir;
     private final Path locationReplaceDir;
+    private final Path locationCountSymbolsDir;
+    private final Path locationCountWordsDir;
+    private final Path locationReverseDir;
+    private final Path locationFindRootsDir;
     private final List<Path> locationDirs;
 
     public StorageFileServiceImpl(StorageProperties storageProperties) {
         this.locationIdentityDir = Paths.get(storageProperties.getLocationIdentityDir());
         this.locationSplitDir = Paths.get(storageProperties.getLocationSplitDir());
         this.locationReplaceDir = Paths.get(storageProperties.getLocationReplaceDir());
-        this.locationDirs = Arrays.asList(this.locationIdentityDir, this.locationSplitDir, this.locationReplaceDir);
+        this.locationCountSymbolsDir = Paths.get(storageProperties.getLocationCountSymbolsDir());
+        this.locationCountWordsDir = Paths.get(storageProperties.getLocationCountWordsDir());
+        this.locationReverseDir = Paths.get(storageProperties.getLocationReverseDir());
+        this.locationFindRootsDir = Paths.get(storageProperties.getLocationFindRootsDir());
+        this.locationDirs = Arrays.asList(this.locationIdentityDir, this.locationSplitDir, this.locationReplaceDir, this.locationCountSymbolsDir, this.locationCountWordsDir, this.locationReverseDir, this.locationFindRootsDir);
     }
 
     @Override
@@ -72,6 +82,10 @@ public class StorageFileServiceImpl implements StorageFileService {
             case IDENTITY : return loadAll(this.locationIdentityDir);
             case SPLIT : return loadAll(this.locationSplitDir);
             case REPLACE : return loadAll(this.locationReplaceDir);
+            case COUNTSYMBOLS: return loadAll(this.locationCountSymbolsDir);
+            case COUNTWORDS: return loadAll(this.locationCountWordsDir);
+            case REVERSE: return loadAll(this.locationReverseDir);
+            case FINDROOTS: return loadAll(this.locationFindRootsDir);
         }
         return null;
     }
@@ -82,6 +96,10 @@ public class StorageFileServiceImpl implements StorageFileService {
             case IDENTITY : return locationIdentityDir.resolve(filename);
             case SPLIT : return locationSplitDir.resolve(filename);
             case REPLACE : return locationReplaceDir.resolve(filename);
+            case COUNTSYMBOLS: return locationCountSymbolsDir.resolve(filename);
+            case COUNTWORDS: return locationCountWordsDir.resolve(filename);
+            case REVERSE: return locationReverseDir.resolve(filename);
+            case FINDROOTS: return locationFindRootsDir.resolve(filename);
         }
         return null;
     }
@@ -146,6 +164,8 @@ public class StorageFileServiceImpl implements StorageFileService {
         }
     }
 
+
+
     private void storeIfConversation(String filename, ConversationType conversationType) {
         Path path = load(filename, ConversationType.IDENTITY);
         try {
@@ -158,6 +178,22 @@ public class StorageFileServiceImpl implements StorageFileService {
                 case REPLACE : {
                     String linesAfterConversation = ConversationUtil.replaceConversation(readFile);
                     storeAfterConversation(filename, this.locationReplaceDir, conversationType, linesAfterConversation);
+                } break;
+                case COUNTSYMBOLS: {
+                    String linesAfterConversation = ConversationUtil.countSymbolsConversation(readFile);
+                    storeAfterConversation(filename, this.locationCountSymbolsDir, conversationType, linesAfterConversation);
+                } break;
+                case COUNTWORDS: {
+                    String linesAfterConversation = ConversationUtil.countWordsConversation(readFile);
+                    storeAfterConversation(filename, this.locationCountWordsDir, conversationType, linesAfterConversation);
+                } break;
+                case REVERSE: {
+                    String linesAfterConversation = ConversationUtil.reverseConversation(readFile);
+                    storeAfterConversation(filename, this.locationReverseDir, conversationType, linesAfterConversation);
+                } break;
+                case FINDROOTS: {
+                    String linesAfterConversation = ConversationUtil.findRootsConversation(readFile);
+                    storeAfterConversation(filename, this.locationFindRootsDir, conversationType, linesAfterConversation);
                 } break;
             }
         } catch (IOException e) {

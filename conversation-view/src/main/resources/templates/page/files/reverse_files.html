@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/file_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Replace files</title>
+</head>
+<body>
+<div layout:fragment="file_content">
+    <div class="card mb-2 mt-2">
+        <div class="card-header">
+            All Reverse Files
+        </div>
+        <div class="card-body">
+            <table class="table table-sm table-hover">
+                <thead>
+                <tr>
+                    <th>files</th>
+                    <th>delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="file,iter : ${files}">
+                    <td>
+                        <a th:href="${file.getUri()}" th:text="${file.getFileName()}"></a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/reverse_files/files/delete/' + ${file.getFileName()}}" type="button" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
