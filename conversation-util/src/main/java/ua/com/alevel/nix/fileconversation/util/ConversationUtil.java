@@ -98,37 +98,26 @@ public class ConversationUtil {
 
     public static String findRootsConversation(String file){
         String result = "";
-        String newFile = "";
-        Map<String, Integer> map = new HashMap<>();
         ArrayList<String> arrayWords = new ArrayList<>();
-        int occurrence = 1;
-        String tempRoot;
-        int maxOccurrence;
+        Map<String, Integer> map = new HashMap<>();
+        int occurrence;
 
-        newFile = file.replaceAll("\\pP|\\s{2,}|\r\n|\n", "");
+        String[] roots = {"ama", "astr", "aud",  "auto", "belli", "bio", "brev", "cap", "centri", "chrono", "cide", "cor", "cardi", "cred", "deca", "derm", "dorm", "duct", "fac", "fic", "fid", "fin", "flex", "fort", "fract", "frag", "gam", "gen", "geo", "gress", "grad", "graph", "gram",
+                          "greg", "hema", "hemo", "hydra", "hydro", "ject", "loqu", "magna", "mania", "mar", "mega", "meter", "micro", "migra", "mit", "mis", "multi", "nov", "omni", "onym", "ortho", "pan", "ped", "pod", "pel", "puls", "phil", "phobia", "port", "proto", "psych", "rupt",
+                          "scope", "scrib", "script", "spir", "struct", "tele", "temp", "terra", "therm", "tox", "tract", "uni", "vent", "vera", "veri", "vict", "vinc", "voc", "vor", "zo"};
 
-        System.out.println(newFile);
-
-        for (String word : newFile.split(" ")){
-            arrayWords.add(word.toLowerCase());
+        for (String word : roots){
+            arrayWords.add(word);
         }
 
         for (int i = 0; i < arrayWords.size(); i++) {
-            tempRoot = "";
-            maxOccurrence = 1;
-            for (int j = 0; j < arrayWords.get(i).toCharArray().length - 2; j++) {
-                char[] tempWord = arrayWords.get(i).toCharArray();
-                tempRoot += tempWord[j];
-            }
-            if(((!map.containsKey(tempRoot) && tempRoot.length() >= 3) && tempRoot.length() != arrayWords.get(i).length())) {
-                occurrence = StringUtils.countMatches(file, tempRoot);
-                if(occurrence > maxOccurrence) {
-                    maxOccurrence = occurrence;
+            if(!map.containsKey(arrayWords.get(i))) {
+                occurrence = StringUtils.countMatches(file, arrayWords.get(i));
+                if(occurrence != 0) {
+                    map.put(arrayWords.get(i), occurrence);
                 }
-                map.put(tempRoot, maxOccurrence);
             }
         }
-
 
         Map <String, Integer> mapResult = sortMapByValueForWord(map);
 
